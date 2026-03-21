@@ -37,7 +37,7 @@ print(result.summary())
 ```python
 from llmevalkit import Evaluator
 
-evaluator = Evaluator(provider="groq", model="llama-3.1-70b-versatile", preset="rag")
+evaluator = Evaluator(provider="groq", model="llama-3.3-70b-versatile", preset="rag")
 result = evaluator.evaluate(
     question="What is Python?",
     answer="Python is a programming language.",
@@ -56,7 +56,7 @@ from llmevalkit import (
 
 evaluator = Evaluator(
     provider="groq",
-    model="llama-3.1-70b-versatile",
+    model="llama-3.3-70b-versatile",
     metrics=[
         BLEUScore(), ROUGEScore(), TokenOverlap(),
         Faithfulness(), Hallucination(),
@@ -101,7 +101,7 @@ See [metrics/README.md](llmevalkit/metrics/README.md) for detailed documentation
 |-------|----------|---------|
 | 1 | OpenAI | `Evaluator(provider="openai", model="gpt-4o-mini")` |
 | 2 | Azure OpenAI | `Evaluator(provider="azure", model="gpt-4o-mini", api_key="...", base_url="...")` |
-| 3 | Groq | `Evaluator(provider="groq", model="llama-3.1-70b-versatile")` |
+| 3 | Groq | `Evaluator(provider="groq", model="llama-3.3-70b-versatile")` |
 | 4 | Anthropic | `Evaluator(provider="anthropic", model="claude-sonnet-4-20250514")` |
 | 5 | HuggingFace | `Evaluator(provider="huggingface", model="meta-llama/Llama-3.1-8B-Instruct")` |
 | 6 | Ollama | `Evaluator(provider="ollama", model="llama3.1")` |
@@ -179,4 +179,4 @@ MIT
 
 ## Author
 
-Venkatkumar Rajan(VK) - https://linkedin.com/in/venkatkumarvk
+Venkatkumar(VK) - https://linkedin.com/in/venkatkumarvk

@@ -302,7 +302,7 @@ The LLM breaks the answer into individual claims and checks each one.
 ```python
 from llmevalkit import Evaluator, Faithfulness
 
-e = Evaluator(provider="groq", model="llama-3.1-70b-versatile",
+e = Evaluator(provider="groq", model="llama-3.3-70b-versatile",
               metrics=[Faithfulness()])
 result = e.evaluate(
     question="What is the refund policy?",
@@ -338,7 +338,7 @@ own knowledge to check facts. Score is inverted: higher = fewer hallucinations =
 ```python
 from llmevalkit import Evaluator, Hallucination
 
-e = Evaluator(provider="groq", model="llama-3.1-70b-versatile",
+e = Evaluator(provider="groq", model="llama-3.3-70b-versatile",
               metrics=[Hallucination()])
 result = e.evaluate(
     question="When was Python created?",
@@ -364,7 +364,7 @@ and getting a response about French cuisine.
 ```python
 from llmevalkit import Evaluator, AnswerRelevance
 
-e = Evaluator(provider="groq", model="llama-3.1-70b-versatile",
+e = Evaluator(provider="groq", model="llama-3.3-70b-versatile",
               metrics=[AnswerRelevance()])
 result = e.evaluate(
     question="What is the capital of France?",
@@ -390,7 +390,7 @@ from generation quality.
 ```python
 from llmevalkit import Evaluator, ContextRelevance
 
-e = Evaluator(provider="groq", model="llama-3.1-70b-versatile",
+e = Evaluator(provider="groq", model="llama-3.3-70b-versatile",
               metrics=[ContextRelevance()])
 result = e.evaluate(
     question="How do solar panels work?",
@@ -417,7 +417,7 @@ to assess logical flow and transitions.
 ```python
 from llmevalkit import Evaluator, Coherence
 
-e = Evaluator(provider="groq", model="llama-3.1-70b-versatile",
+e = Evaluator(provider="groq", model="llama-3.3-70b-versatile",
               metrics=[Coherence()])
 result = e.evaluate(
     question="Explain machine learning.",
@@ -444,7 +444,7 @@ LLM judgment to assess conceptual coverage.
 ```python
 from llmevalkit import Evaluator, Completeness
 
-e = Evaluator(provider="groq", model="llama-3.1-70b-versatile",
+e = Evaluator(provider="groq", model="llama-3.3-70b-versatile",
               metrics=[Completeness()])
 result = e.evaluate(
     question="What are the pros AND cons of remote work?",
@@ -469,7 +469,7 @@ Score is inverted: higher = less toxic = better.
 ```python
 from llmevalkit import Evaluator, Toxicity
 
-e = Evaluator(provider="groq", model="llama-3.1-70b-versatile",
+e = Evaluator(provider="groq", model="llama-3.3-70b-versatile",
               metrics=[Toxicity()])
 result = e.evaluate(
     answer="Solar energy benefits communities worldwide."
@@ -496,7 +496,7 @@ from llmevalkit import Evaluator, GEval
 
 e = Evaluator(
     provider="groq",
-    model="llama-3.1-70b-versatile",
+    model="llama-3.3-70b-versatile",
     metrics=[
         GEval(criteria="Is the response empathetic?"),
         GEval(criteria="Does it provide clear next steps?"),
@@ -527,7 +527,7 @@ from llmevalkit import (
 
 evaluator = Evaluator(
     provider="groq",
-    model="llama-3.1-70b-versatile",
+    model="llama-3.3-70b-versatile",
     metrics=[
         BLEUScore(), ROUGEScore(), TokenOverlap(), SemanticSimilarity(),
         KeywordCoverage(), AnswerLength(), ReadabilityScore(),

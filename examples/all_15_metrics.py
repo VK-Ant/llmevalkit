@@ -148,10 +148,10 @@ def run_llm_metrics():
 
     # Change provider and model to whatever you use.
     # provider="openai", model="gpt-4o-mini"
-    # provider="groq", model="llama-3.1-70b-versatile"
+    # provider="groq", model="llama-3.3-70b-versatile"
     # provider="ollama", model="llama3.1"
     provider = "groq"
-    model = "llama-3.1-70b-versatile"
+    model = "llama-3.3-70b-versatile"
 
     # 8. Faithfulness
     # Is every claim in the answer supported by the context?
