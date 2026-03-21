@@ -70,7 +70,7 @@ See [metrics/README.md](llmevalkit/metrics/README.md) for detailed documentation
 
 ### Math metrics (no API needed)
 
-| s.no. | Metric | What it measures |
+| S.no. | Metric | What it measures |
 |---|--------|-----------------|
 | 1 | BLEUScore | N-gram precision between answer and reference |
 | 2 | ROUGEScore | Recall-oriented overlap (ROUGE-1, 2, L) |
@@ -82,7 +82,7 @@ See [metrics/README.md](llmevalkit/metrics/README.md) for detailed documentation
 
 ### LLM-as-judge metrics (needs API)
 
-| s.no. | Metric | What it measures |
+| S.no. | Metric | What it measures |
 |---|--------|-----------------|
 | 8 | Faithfulness | Is the answer grounded in the context? |
 | 9 | Hallucination | Are there fabricated claims? (works without context) |
