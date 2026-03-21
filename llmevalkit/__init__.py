@@ -18,7 +18,7 @@ Quick Start:
     >>> print(result)
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "Venkatkumar Rajan"
 
 from llmevalkit.evaluator import Evaluator

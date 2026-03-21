@@ -130,4 +130,4 @@ MIT
 
 ## Author
 
-Venkatkumar Rajan - https://linkedin.com/in/venkatkumarvk
+Venkatkumar (VK) - https://linkedin.com/in/venkatkumarvk
