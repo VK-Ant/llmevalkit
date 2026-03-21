@@ -182,6 +182,23 @@ class Evaluator:
                     self.console.print(f"  [yellow]⚠ Skipping {metric.name} (missing required fields)[/]")
                 continue
             
+            # Math metrics do not need a client. LLM metrics do.
+            is_math = hasattr(metric, '_compute')
+            if not is_math and self.client is None:
+                # LLM metric but no provider set.
+                result = MetricResult(
+                    name=metric.name,
+                    score=0.0,
+                    reason="Skipped: this metric needs an API provider. Use provider='openai' or 'groq' etc.",
+                    details={"error": "no_provider"},
+                )
+                metric_results[metric.name] = result
+                if self.config.verbose:
+                    self.console.print(
+                        "  [red]* {:<20} SKIPPED (needs API provider)[/]".format(metric.name)
+                    )
+                continue
+
             start = time.time()
             result = metric.evaluate(self.client, **eval_kwargs)
             elapsed = time.time() - start

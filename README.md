@@ -1,4 +1,4 @@
-# LLMEVAL
+# llmevalkit
 
 A Python library for evaluating LLM outputs. 15 built-in metrics.
 Works with or without an API key.
@@ -6,6 +6,8 @@ Works with or without an API key.
 - 7 math-based metrics: free, instant, runs offline
 - 8 LLM-as-judge metrics: uses any LLM provider to evaluate
 - Supports: OpenAI, Azure, Anthropic, Groq, Ollama, or no provider at all
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vk-ant/llmevalkit/blob/main/notebooks/llmevalkit_demo.ipynb)
 
 ## Install
 
@@ -70,8 +72,8 @@ See [metrics/README.md](llmevalkit/metrics/README.md) for detailed documentation
 
 ### Math metrics (no API needed)
 
-| S.no. | Metric | What it measures |
-|---|--------|-----------------|
+| S.No. | Metric | What it measures |
+|-------|--------|-----------------|
 | 1 | BLEUScore | N-gram precision between answer and reference |
 | 2 | ROUGEScore | Recall-oriented overlap (ROUGE-1, 2, L) |
 | 3 | TokenOverlap | Word-level F1 with stopword filtering |
@@ -82,8 +84,8 @@ See [metrics/README.md](llmevalkit/metrics/README.md) for detailed documentation
 
 ### LLM-as-judge metrics (needs API)
 
-| S.no. | Metric | What it measures |
-|---|--------|-----------------|
+| S.No. | Metric | What it measures |
+|-------|--------|-----------------|
 | 8 | Faithfulness | Is the answer grounded in the context? |
 | 9 | Hallucination | Are there fabricated claims? (works without context) |
 | 10 | AnswerRelevance | Does the answer address the question? |
@@ -93,28 +95,37 @@ See [metrics/README.md](llmevalkit/metrics/README.md) for detailed documentation
 | 14 | Toxicity | Is the content safe and appropriate? |
 | 15 | GEval | Custom criteria you define |
 
-## Providers
+## Supported providers
 
-```python
-Evaluator(provider="openai", model="gpt-4o-mini")
-Evaluator(provider="groq", model="llama-3.1-70b-versatile")
-Evaluator(provider="anthropic", model="claude-sonnet-4-20250514")
-Evaluator(provider="ollama", model="llama3.1")
-Evaluator(provider="none", preset="math")   # no API needed
-```
+| S.No. | Provider | Example |
+|-------|----------|---------|
+| 1 | OpenAI | `Evaluator(provider="openai", model="gpt-4o-mini")` |
+| 2 | Azure OpenAI | `Evaluator(provider="azure", model="gpt-4o-mini", api_key="...", base_url="...")` |
+| 3 | Groq | `Evaluator(provider="groq", model="llama-3.1-70b-versatile")` |
+| 4 | Anthropic | `Evaluator(provider="anthropic", model="claude-sonnet-4-20250514")` |
+| 5 | HuggingFace | `Evaluator(provider="huggingface", model="meta-llama/Llama-3.1-8B-Instruct")` |
+| 6 | Ollama | `Evaluator(provider="ollama", model="llama3.1")` |
+| 7 | Custom | `Evaluator(provider="custom", model="my-model", base_url="http://localhost:8000/v1")` |
+| 8 | None (math only) | `Evaluator(provider="none", preset="math")` |
 
 ## Presets
 
-```python
-Evaluator(preset="rag")           # Faithfulness, AnswerRelevance, ContextRelevance, Hallucination
-Evaluator(preset="chatbot")       # AnswerRelevance, Coherence, Toxicity, Hallucination
-Evaluator(preset="math")          # All 7 math metrics
-Evaluator(preset="hybrid_rag")    # Math + LLM combined
-```
+| S.No. | Preset | Metrics included |
+|-------|--------|-----------------|
+| 1 | rag | Faithfulness, AnswerRelevance, ContextRelevance, Hallucination |
+| 2 | chatbot | AnswerRelevance, Coherence, Toxicity, Hallucination |
+| 3 | safety | Toxicity, Hallucination |
+| 4 | summarization | Faithfulness, Completeness, Coherence |
+| 5 | math | All 7 math metrics |
+| 6 | math_minimal | TokenOverlap, AnswerLength |
+| 7 | hybrid_rag | TokenOverlap, BLEU, KeywordCoverage, Faithfulness, Hallucination |
 
 ## Batch evaluation
 
 ```python
+from llmevalkit import Evaluator
+
+evaluator = Evaluator(provider="none", preset="math")
 batch = evaluator.evaluate_batch([
     {"question": "What is AI?", "answer": "AI is artificial intelligence.", "context": "..."},
     {"question": "What is ML?", "answer": "ML uses data to learn.", "context": "..."},
@@ -124,10 +135,48 @@ df = batch.to_dataframe()  # needs pandas
 df.to_csv("results.csv")
 ```
 
+## CLI
+
+```
+llmevalkit evaluate --question "What is AI?" --answer "AI is artificial intelligence." --preset math
+llmevalkit evaluate --file test_cases.json --output results.json
+llmevalkit info
+```
+
+## Project structure
+
+```
+llmevalkit/
+    __init__.py
+    evaluator.py
+    models.py
+    llm_client.py
+    prompts.py
+    cli.py
+    metrics/
+        README.md
+        base.py
+        faithfulness.py
+        hallucination.py
+        answer_relevance.py
+        context_relevance.py
+        coherence.py
+        completeness.py
+        toxicity.py
+        geval.py
+        math_metrics.py
+    utils/
+        token_counter.py
+tests/
+    test_llmeval.py
+examples/
+    all_15_metrics.py
+```
+
 ## License
 
 MIT
 
 ## Author
 
-Venkatkumar (VK) - https://linkedin.com/in/venkatkumarvk
+Venkatkumar Rajan(VK) - https://linkedin.com/in/venkatkumarvk

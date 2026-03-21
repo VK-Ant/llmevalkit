@@ -1,8 +1,9 @@
-"""Base metric class for all LLMEVAL metrics."""
+"""Base metric class for all evaluation metrics."""
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+import sys
+from abc import ABC
 from typing import Optional
 
 from jinja2 import Template
@@ -12,70 +13,61 @@ from llmevalkit.models import MetricResult
 
 
 class BaseMetric(ABC):
-    """Abstract base class for all evaluation metrics.
-    
-    All metrics follow the same pattern:
-    1. Render a prompt template with the input data
-    2. Send to LLM for evaluation
-    3. Parse the JSON response
-    4. Normalize score to 0-1 range
-    5. Return MetricResult
-    """
-    
-    name: str = "base"
-    prompt_template: str = ""
-    # If True, score is inverted (1 - normalized_score) because the raw score
-    # measures a negative quality (e.g., hallucination, toxicity)
-    invert_score: bool = False
+    """Base class for LLM-as-judge metrics."""
 
-    def __init__(self, weight: float = 1.0):
+    name = "base"
+    prompt_template = ""
+    invert_score = False
+
+    def __init__(self, weight=1.0):
         self.weight = weight
 
-    def evaluate(self, client: LLMClient, **kwargs) -> MetricResult:
-        """Run the metric evaluation.
-        
-        Args:
-            client: LLMClient instance for LLM calls
-            **kwargs: question, answer, context, reference, etc.
-        
-        Returns:
-            MetricResult with score, reason, and details
-        """
-        # Render prompt
+    def evaluate(self, client, **kwargs):
+        """Run the metric. Returns MetricResult."""
         template = Template(self.prompt_template)
         prompt = template.render(**kwargs)
-        
-        # System prompt for consistent evaluation
+
         system = (
             "You are a precise evaluation judge. Always respond with valid JSON only. "
             "No markdown, no extra text. Be strict and consistent in scoring."
         )
-        
+
         try:
             result = client.generate_json(prompt, system=system)
             return self._parse_result(result)
         except Exception as e:
-            # Return a zero-score result on failure rather than crashing
+            # Print the error so the user can see what went wrong.
+            print("ERROR in {}: {}".format(self.name, e), file=sys.stderr)
             return MetricResult(
                 name=self.name,
                 score=0.0,
-                reason=f"Evaluation failed: {str(e)}",
+                reason="Evaluation failed: {}".format(str(e)),
                 details={"error": str(e)},
             )
 
-    def _parse_result(self, result: dict) -> MetricResult:
+    def _parse_result(self, result):
         """Parse LLM JSON response into MetricResult."""
         raw_score = result.get("score", 3)
-        # Normalize from 1-5 scale to 0-1
+
+        # Handle string scores like "4" instead of 4.
+        if isinstance(raw_score, str):
+            try:
+                raw_score = float(raw_score)
+            except ValueError:
+                raw_score = 3
+
+        # Normalize from 1-5 scale to 0-1.
         normalized = (raw_score - 1) / 4.0
         normalized = max(0.0, min(1.0, normalized))
-        
+
         if self.invert_score:
             normalized = 1.0 - normalized
-        
-        # Remove score from details to avoid duplication
-        details = {k: v for k, v in result.items() if k not in ("score", "reason")}
-        
+
+        details = {}
+        for k, v in result.items():
+            if k not in ("score", "reason"):
+                details[k] = v
+
         return MetricResult(
             name=self.name,
             score=round(normalized, 4),
@@ -84,12 +76,10 @@ class BaseMetric(ABC):
         )
 
     @property
-    def required_fields(self) -> list[str]:
-        """Fields required by this metric. Override in subclasses."""
+    def required_fields(self):
         return ["question", "answer"]
-    
-    def validate_inputs(self, **kwargs) -> bool:
-        """Check that required fields are present and non-empty."""
+
+    def validate_inputs(self, **kwargs):
         for field in self.required_fields:
             if not kwargs.get(field):
                 return False
