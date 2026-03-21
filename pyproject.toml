@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llmevalkit"
+version = "1.0.0"
+description = "A comprehensive, reference-free LLM evaluation library for RAG pipelines, chatbots, and generative AI systems."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Venkatkumar Rajan", email = "venkatkumarr.vk99@gmail.com"}
+]
+keywords = [
+    "llm", "evaluation", "rag", "nlp", "generative-ai",
+    "faithfulness", "hallucination", "relevance", "metrics",
+    "ragas", "deepeval", "benchmark", "testing"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "openai>=1.0.0",
+    "numpy>=1.24.0",
+    "pydantic>=2.0.0",
+    "tiktoken>=0.5.0",
+    "tenacity>=8.0.0",
+    "rich>=13.0.0",
+    "jinja2>=3.1.0",
+]
+
+[project.optional-dependencies]
+azure = ["openai>=1.0.0"]
+anthropic = ["anthropic>=0.30.0"]
+huggingface = ["transformers>=4.30.0", "torch>=2.0.0", "sentence-transformers>=2.2.0"]
+all = ["anthropic>=0.30.0", "transformers>=4.30.0", "torch>=2.0.0", "sentence-transformers>=2.2.0"]
+dev = ["pytest>=7.0.0", "pytest-asyncio>=0.21.0", "pytest-cov>=4.0.0", "black>=23.0.0", "ruff>=0.1.0", "mypy>=1.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/vk-ant/llmevalkit"
+Documentation = "https://github.com/vk-ant/llmevalkit#readme"
+Repository = "https://github.com/vk-ant/llmevalkit"
+Issues = "https://github.com/vk-ant/llmevalkit/issues"
+
+[project.scripts]
+llmevalkit = "llmevalkit.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["llmevalkit*"]
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
