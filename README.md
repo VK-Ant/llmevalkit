@@ -398,10 +398,14 @@ HIPAA, GDPR, DPDP Act, EU AI Act, and NIST AI RMF are government regulations and
 
 Using this library does not make your system compliant with any regulation. Consult qualified legal and compliance professionals for compliance decisions.
 
+## PyPI (Opensource code)
+
+Github: https://github.com/VK-Ant/llmevalkit
+
 ## License
 
 MIT
 
 ## Author
 
-Venkatkumar Rajan - https://linkedin.com/in/venkatkumarvk | https://github.com/VK-Ant
+Venkatkumar Rajan - https://linkedin.com/in/venkatkumarvk | https://github.com/VK-Ant 
