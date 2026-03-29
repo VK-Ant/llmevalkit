@@ -10,7 +10,7 @@ Works with or without an API key.
 - Parallel execution: API metrics run simultaneously for speed
 - 8 providers: OpenAI, Azure, Groq, Anthropic, HuggingFace, Ollama, Custom, None
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/vk-ant/llmevalkit/blob/main/notebooks/llmevalkit_v2_demo.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/VK-Ant/llmevalkit/blob/main/notebooks/llmevalkit_v2_demo.ipynb)
 
 ## Install
 
@@ -404,4 +404,4 @@ MIT
 
 ## Author
 
-Venkatkumar Rajan - https://linkedin.com/in/venkatkumarvk | https://github.com/vk-ant
+Venkatkumar Rajan - https://linkedin.com/in/venkatkumarvk | https://github.com/VK-Ant
