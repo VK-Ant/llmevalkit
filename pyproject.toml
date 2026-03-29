@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llmevalkit"
-version = "1.0.3"
-description = "A comprehensive, reference-free LLM evaluation library for RAG pipelines, chatbots, and generative AI systems."
+version = "2.0.2"
+description = "LLM evaluation and compliance testing library. Quality metrics + PII detection + HIPAA/GDPR/DPDP/EU AI Act compliance. Works with or without API."
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"
@@ -15,7 +15,8 @@ authors = [
 keywords = [
     "llm", "evaluation", "rag", "nlp", "generative-ai",
     "faithfulness", "hallucination", "relevance", "metrics",
-    "ragas", "deepeval", "benchmark", "testing"
+    "compliance", "pii", "hipaa", "gdpr", "dpdp", "eu-ai-act",
+    "testing", "responsible-ai"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -44,7 +45,8 @@ dependencies = [
 azure = ["openai>=1.0.0"]
 anthropic = ["anthropic>=0.30.0"]
 huggingface = ["transformers>=4.30.0", "torch>=2.0.0", "sentence-transformers>=2.2.0"]
-all = ["anthropic>=0.30.0", "transformers>=4.30.0", "torch>=2.0.0", "sentence-transformers>=2.2.0"]
+nlp = ["spacy>=3.5.0"]
+all = ["anthropic>=0.30.0", "transformers>=4.30.0", "torch>=2.0.0", "sentence-transformers>=2.2.0", "spacy>=3.5.0"]
 dev = ["pytest>=7.0.0", "pytest-asyncio>=0.21.0", "pytest-cov>=4.0.0", "black>=23.0.0", "ruff>=0.1.0", "mypy>=1.0.0"]
 
 [project.urls]

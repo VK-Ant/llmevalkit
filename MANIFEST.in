@@ -3,3 +3,4 @@ include README.md
 recursive-include llmevalkit *.py
 recursive-include examples *.py
 recursive-include tests *.py
+recursive-include notebooks *.ipynb

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import time
+import concurrent.futures
 from typing import Any, Optional, Union
 
 from rich.console import Console
@@ -37,24 +38,45 @@ from llmevalkit.metrics import (
 )
 from llmevalkit.metrics.base import BaseMetric
 from llmevalkit.metrics.math_metrics import MathMetric
+from llmevalkit.compliance import (
+    PIIDetector,
+    HIPAACheck,
+    GDPRCheck,
+    DPDPCheck,
+    EUAIActCheck,
+)
 
 
 # Preset metric collections
 METRIC_PRESETS = {
-    # LLM-as-Judge presets (need API)
+    # --- Quality evaluation presets (v1) ---
+    # API presets (need provider)
     "rag": [Faithfulness, AnswerRelevance, ContextRelevance, Hallucination],
     "chatbot": [AnswerRelevance, Coherence, Toxicity, Hallucination],
     "summarization": [Faithfulness, Completeness, Coherence],
     "safety": [Toxicity, Hallucination],
     "all": [Faithfulness, AnswerRelevance, ContextRelevance, Hallucination, Toxicity, Coherence, Completeness],
     "minimal": [Faithfulness, AnswerRelevance],
-    # Pure Math presets (NO API needed!)
+    # Local presets (no API needed)
+    "local": [BLEUScore, ROUGEScore, TokenOverlap, KeywordCoverage, AnswerLength, ReadabilityScore],
     "math": [BLEUScore, ROUGEScore, TokenOverlap, KeywordCoverage, AnswerLength, ReadabilityScore],
     "math_similarity": [BLEUScore, ROUGEScore, TokenOverlap, SemanticSimilarity],
     "math_minimal": [TokenOverlap, AnswerLength],
-    # Hybrid presets (math + LLM)
+    # Hybrid presets (local + API)
     "hybrid_rag": [TokenOverlap, BLEUScore, KeywordCoverage, Faithfulness, Hallucination],
     "hybrid_chatbot": [ReadabilityScore, AnswerLength, Coherence, Toxicity],
+    # --- Compliance presets (v2) ---
+    "pii": [PIIDetector],
+    "hipaa": [PIIDetector, HIPAACheck],
+    "gdpr": [PIIDetector, GDPRCheck],
+    "india": [PIIDetector, DPDPCheck],
+    "dpdp": [PIIDetector, DPDPCheck],
+    "eu_ai": [PIIDetector, GDPRCheck, EUAIActCheck],
+    "compliance_all": [PIIDetector, HIPAACheck, GDPRCheck, DPDPCheck, EUAIActCheck],
+    # --- Combined presets (quality + compliance) ---
+    "rag_hipaa": [Faithfulness, Hallucination, AnswerRelevance, PIIDetector, HIPAACheck],
+    "rag_gdpr": [Faithfulness, Hallucination, AnswerRelevance, PIIDetector, GDPRCheck],
+    "rag_india": [Faithfulness, Hallucination, AnswerRelevance, PIIDetector, DPDPCheck],
 }
 
 
@@ -175,21 +197,29 @@ class Evaluator:
         metric_results: dict[str, MetricResult] = {}
         total_weight = 0.0
         weighted_sum = 0.0
-        
+
+        # Separate metrics into local (instant) and API (need LLM call).
+        local_metrics = []
+        api_metrics = []
+
         for metric in self.metrics:
             if not metric.validate_inputs(**eval_kwargs):
                 if self.config.verbose:
-                    self.console.print(f"  [yellow]⚠ Skipping {metric.name} (missing required fields)[/]")
+                    self.console.print("  [yellow]Skipping {} (missing required fields)[/]".format(metric.name))
                 continue
-            
-            # Math metrics do not need a client. LLM metrics do.
-            is_math = hasattr(metric, '_compute')
-            if not is_math and self.client is None:
-                # LLM metric but no provider set.
+
+            # Check if metric can run without API.
+            is_local = hasattr(metric, '_compute')  # MathMetric
+            is_compliance_local = hasattr(metric, 'use_llm') and not metric.use_llm
+
+            if is_local or is_compliance_local:
+                local_metrics.append(metric)
+            elif self.client is None:
+                # API metric but no provider set.
                 result = MetricResult(
                     name=metric.name,
                     score=0.0,
-                    reason="Skipped: this metric needs an API provider. Use provider='openai' or 'groq' etc.",
+                    reason="Skipped: needs an API provider. Use provider='openai' or 'groq' etc.",
                     details={"error": "no_provider"},
                 )
                 metric_results[metric.name] = result
@@ -197,21 +227,57 @@ class Evaluator:
                     self.console.print(
                         "  [red]* {:<20} SKIPPED (needs API provider)[/]".format(metric.name)
                     )
-                continue
+            else:
+                api_metrics.append(metric)
 
+        # Run local metrics (instant, sequential is fine).
+        for metric in local_metrics:
             start = time.time()
             result = metric.evaluate(self.client, **eval_kwargs)
             elapsed = time.time() - start
-            
             metric_results[metric.name] = result
             weighted_sum += result.score * metric.weight
             total_weight += metric.weight
-            
             if self.config.verbose:
                 color = "green" if result.score >= 0.7 else "yellow" if result.score >= 0.4 else "red"
                 self.console.print(
-                    f"  [{color}]* {metric.name:<20} {result.score:.3f}[/]  ({elapsed:.1f}s)"
+                    "  [{}]* {:<20} {:.3f}[/]  ({:.1f}s)".format(
+                        color, metric.name, result.score, elapsed
+                    )
                 )
+
+        # Run API metrics in parallel.
+        if api_metrics:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+                future_map = {}
+                start_times = {}
+                for metric in api_metrics:
+                    start_times[metric.name] = time.time()
+                    future = pool.submit(metric.evaluate, self.client, **eval_kwargs)
+                    future_map[future] = metric
+
+                for future in concurrent.futures.as_completed(future_map):
+                    metric = future_map[future]
+                    elapsed = time.time() - start_times[metric.name]
+                    try:
+                        result = future.result()
+                    except Exception as e:
+                        result = MetricResult(
+                            name=metric.name,
+                            score=0.0,
+                            reason="Failed: {}".format(str(e)),
+                            details={"error": str(e)},
+                        )
+                    metric_results[metric.name] = result
+                    weighted_sum += result.score * metric.weight
+                    total_weight += metric.weight
+                    if self.config.verbose:
+                        color = "green" if result.score >= 0.7 else "yellow" if result.score >= 0.4 else "red"
+                        self.console.print(
+                            "  [{}]* {:<20} {:.3f}[/]  ({:.1f}s)".format(
+                                color, metric.name, result.score, elapsed
+                            )
+                        )
         
         overall = weighted_sum / total_weight if total_weight > 0 else 0.0
         

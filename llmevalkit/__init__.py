@@ -1,30 +1,35 @@
 """
-LLMEVAL - Comprehensive LLM Evaluation Library
-================================================
+llmevalkit - LLM Evaluation and Compliance Testing Library
+==========================================================
 
-A production-grade, reference-free evaluation library for RAG pipelines,
-chatbots, and generative AI systems.
+Quality evaluation (15 metrics) and compliance testing (PII, HIPAA,
+GDPR, DPDP Act, EU AI Act) for LLM outputs. Works with or without API.
 
 Developed by Venkatkumar Rajan (@VK_Venkatkumar)
 
 Quick Start:
-    >>> from llmeval import Evaluator
-    >>> evaluator = Evaluator(provider="openai", model="gpt-4o-mini")
+    >>> from llmevalkit import Evaluator
+    >>> evaluator = Evaluator(provider="none", preset="math")
     >>> result = evaluator.evaluate(
-    ...     question="What is photosynthesis?",
-    ...     answer="Photosynthesis is the process by which plants convert sunlight into energy.",
-    ...     context="Photosynthesis is a biological process where plants use sunlight, water, and CO2 to produce glucose and oxygen."
+    ...     question="What is Python?",
+    ...     answer="Python is a programming language.",
+    ...     context="Python is a high-level, interpreted programming language."
     ... )
-    >>> print(result)
+    >>> print(result.summary())
+
+Compliance:
+    >>> from llmevalkit.compliance import PIIDetector, HIPAACheck
+    >>> evaluator = Evaluator(provider="none", metrics=[PIIDetector(), HIPAACheck()])
+    >>> result = evaluator.evaluate(answer="Patient John Smith, SSN 123-45-6789")
 """
 
-__version__ = "1.0.3"
+__version__ = "2.0.2"
 __author__ = "Venkatkumar Rajan"
 
 from llmevalkit.evaluator import Evaluator
 from llmevalkit.models import EvalResult, EvalConfig, MetricResult
 from llmevalkit.metrics import (
-    # LLM-as-Judge metrics
+    # API metrics (LLM-as-judge)
     Faithfulness,
     AnswerRelevance,
     ContextRelevance,
@@ -33,7 +38,7 @@ from llmevalkit.metrics import (
     Coherence,
     Completeness,
     GEval,
-    # Pure Math metrics (NO API needed)
+    # Local metrics (no API needed)
     BLEUScore,
     ROUGEScore,
     TokenOverlap,
@@ -48,7 +53,7 @@ __all__ = [
     "EvalResult",
     "EvalConfig",
     "MetricResult",
-    # LLM-as-Judge Metrics
+    # API metrics
     "Faithfulness",
     "AnswerRelevance",
     "ContextRelevance",
@@ -57,7 +62,7 @@ __all__ = [
     "Coherence",
     "Completeness",
     "GEval",
-    # Pure Math Metrics
+    # Local metrics
     "BLEUScore",
     "ROUGEScore",
     "TokenOverlap",
