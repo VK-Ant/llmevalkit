@@ -1,9 +1,9 @@
 """
-llmevalkit - LLM Evaluation and Compliance Testing Library
-==========================================================
+llmevalkit - LLM Evaluation, Compliance, Document Parsing, and Security Library
+================================================================================
 
-Quality evaluation (15 metrics) and compliance testing (PII, HIPAA,
-GDPR, DPDP Act, EU AI Act) for LLM outputs. Works with or without API.
+38 metrics for LLM evaluation, compliance, document parsing, governance,
+security, and multimodal testing. Everything works with or without API.
 
 Developed by Venkatkumar Rajan (@VK_Venkatkumar)
 
@@ -23,7 +23,7 @@ Compliance:
     >>> result = evaluator.evaluate(answer="Patient John Smith, SSN 123-45-6789")
 """
 
-__version__ = "2.0.3"
+__version__ = "3.0.0"
 __author__ = "Venkatkumar Rajan"
 
 from llmevalkit.evaluator import Evaluator

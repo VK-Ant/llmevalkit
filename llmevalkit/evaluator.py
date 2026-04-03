@@ -45,24 +45,36 @@ from llmevalkit.compliance import (
     DPDPCheck,
     EUAIActCheck,
 )
+from llmevalkit.doceval import (
+    FieldAccuracy,
+    FieldCompleteness,
+    FieldHallucination,
+    FormatValidation,
+    ExtractionConsistency,
+)
+from llmevalkit.governance import NISTCheck, CoSAICheck, ISO42001Check, SOC2Check
+from llmevalkit.security import PromptInjectionCheck, BiasDetector
+from llmevalkit.multimodal import (
+    OCRAccuracy,
+    AudioTranscriptionAccuracy,
+    ImageTextAlignment,
+    VisionQAAccuracy,
+)
 
 
 # Preset metric collections
 METRIC_PRESETS = {
     # --- Quality evaluation presets (v1) ---
-    # API presets (need provider)
     "rag": [Faithfulness, AnswerRelevance, ContextRelevance, Hallucination],
     "chatbot": [AnswerRelevance, Coherence, Toxicity, Hallucination],
     "summarization": [Faithfulness, Completeness, Coherence],
     "safety": [Toxicity, Hallucination],
     "all": [Faithfulness, AnswerRelevance, ContextRelevance, Hallucination, Toxicity, Coherence, Completeness],
     "minimal": [Faithfulness, AnswerRelevance],
-    # Local presets (no API needed)
     "local": [BLEUScore, ROUGEScore, TokenOverlap, KeywordCoverage, AnswerLength, ReadabilityScore],
     "math": [BLEUScore, ROUGEScore, TokenOverlap, KeywordCoverage, AnswerLength, ReadabilityScore],
     "math_similarity": [BLEUScore, ROUGEScore, TokenOverlap, SemanticSimilarity],
     "math_minimal": [TokenOverlap, AnswerLength],
-    # Hybrid presets (local + API)
     "hybrid_rag": [TokenOverlap, BLEUScore, KeywordCoverage, Faithfulness, Hallucination],
     "hybrid_chatbot": [ReadabilityScore, AnswerLength, Coherence, Toxicity],
     # --- Compliance presets (v2) ---
@@ -73,10 +85,34 @@ METRIC_PRESETS = {
     "dpdp": [PIIDetector, DPDPCheck],
     "eu_ai": [PIIDetector, GDPRCheck, EUAIActCheck],
     "compliance_all": [PIIDetector, HIPAACheck, GDPRCheck, DPDPCheck, EUAIActCheck],
-    # --- Combined presets (quality + compliance) ---
     "rag_hipaa": [Faithfulness, Hallucination, AnswerRelevance, PIIDetector, HIPAACheck],
     "rag_gdpr": [Faithfulness, Hallucination, AnswerRelevance, PIIDetector, GDPRCheck],
     "rag_india": [Faithfulness, Hallucination, AnswerRelevance, PIIDetector, DPDPCheck],
+    # --- Document evaluation presets (v3) ---
+    "doceval": [FieldAccuracy, FieldCompleteness, FieldHallucination, FormatValidation],
+    "doceval_full": [FieldAccuracy, FieldCompleteness, FieldHallucination, FormatValidation, ExtractionConsistency],
+    "doceval_hipaa": [FieldAccuracy, FieldCompleteness, FieldHallucination, PIIDetector, HIPAACheck],
+    # --- Governance presets (v3) ---
+    "governance": [NISTCheck, CoSAICheck, ISO42001Check, SOC2Check],
+    "nist": [NISTCheck],
+    # --- Security presets (v3) ---
+    "security": [PromptInjectionCheck, BiasDetector],
+    "security_full": [PromptInjectionCheck, BiasDetector, PIIDetector, Toxicity],
+    # --- Multimodal presets (v3) ---
+    "ocr": [OCRAccuracy],
+    "multimodal": [OCRAccuracy, AudioTranscriptionAccuracy, ImageTextAlignment, VisionQAAccuracy],
+    # --- Full audit preset ---
+    "full_audit": [
+        BLEUScore, ROUGEScore, TokenOverlap, KeywordCoverage,
+        PIIDetector, HIPAACheck, GDPRCheck, DPDPCheck, EUAIActCheck,
+        PromptInjectionCheck, BiasDetector,
+    ],
+    "enterprise": [
+        Faithfulness, Hallucination, AnswerRelevance,
+        PIIDetector, HIPAACheck, GDPRCheck,
+        PromptInjectionCheck, BiasDetector,
+        NISTCheck,
+    ],
 }
 
 
