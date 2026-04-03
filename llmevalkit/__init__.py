@@ -23,7 +23,7 @@ Compliance:
     >>> result = evaluator.evaluate(answer="Patient John Smith, SSN 123-45-6789")
 """
 
-__version__ = "3.0.1"
+__version__ = "3.0.2"
 __author__ = "Venkatkumar Rajan"
 
 from llmevalkit.evaluator import Evaluator

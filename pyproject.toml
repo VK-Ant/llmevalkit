@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llmevalkit"
-version = "3.0.1"
+version = "3.0.4"
 description = "LLM evaluation, compliance, document parsing, governance, security, and multimodal testing. 38 metrics. Works with or without API."
 readme = "README.md"
 license = {text = "MIT"}
@@ -51,10 +51,12 @@ all = ["anthropic>=0.30.0", "transformers>=4.30.0", "torch>=2.0.0", "sentence-tr
 dev = ["pytest>=7.0.0", "pytest-asyncio>=0.21.0", "pytest-cov>=4.0.0", "black>=23.0.0", "ruff>=0.1.0", "mypy>=1.0.0"]
 
 [project.urls]
-Homepage = "https://github.com/VK-Ant/llmevalkit"
+Homepage = "https://pypi.org/project/llmevalkit/"
 Documentation = "https://github.com/VK-Ant/llmevalkit#readme"
 Repository = "https://github.com/VK-Ant/llmevalkit"
 Issues = "https://github.com/VK-Ant/llmevalkit/issues"
+PyPI = "https://pypi.org/project/llmevalkit/"
+Portfolio = "https://vk-ant.github.io/Venkatkumar/"
 
 [project.scripts]
 llmevalkit = "llmevalkit.cli:main"
