@@ -8,9 +8,9 @@ Works with any LLM application: RAG pipelines, agentic AI, multi-agent systems, 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/VK-Ant/llmevalkit/blob/main/notebooks/llmevalkit_v4_demo.ipynb)
 
-PyPI: https://pypi.org/project/llmevalkit/
-GitHub: https://github.com/VK-Ant/llmevalkit
-Portfolio: https://vk-ant.github.io/Venkatkumar/
+- PyPI: https://pypi.org/project/llmevalkit/
+- GitHub: https://github.com/VK-Ant/llmevalkit
+- Portfolio: https://vk-ant.github.io/Venkatkumar/
 
 ## Install
 
@@ -274,7 +274,7 @@ MIT
 
 Venkatkumar Rajan
 
-LinkedIn: https://linkedin.com/in/venkatkumarvk
-GitHub: https://github.com/VK-Ant
-Portfolio: https://vk-ant.github.io/Venkatkumar/
-PyPI: https://pypi.org/project/llmevalkit/
+- LinkedIn: https://linkedin.com/in/venkatkumarvk
+- GitHub: https://github.com/VK-Ant
+- Portfolio: https://vk-ant.github.io/Venkatkumar/
+- PyPI: https://pypi.org/project/llmevalkit/
