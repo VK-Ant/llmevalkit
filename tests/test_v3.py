@@ -441,12 +441,12 @@ class TestV3Presets(unittest.TestCase):
     def test_multimodal_preset(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="multimodal")
-        self.assertEqual(len(e.metrics), 4)
+        self.assertEqual(len(e.metrics), 6)
 
     def test_full_audit_preset(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="full_audit")
-        self.assertEqual(len(e.metrics), 11)
+        self.assertEqual(len(e.metrics), 14)
 
     def test_v1_presets_still_work(self):
         from llmevalkit import Evaluator

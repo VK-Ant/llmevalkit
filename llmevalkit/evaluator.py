@@ -59,6 +59,18 @@ from llmevalkit.multimodal import (
     AudioTranscriptionAccuracy,
     ImageTextAlignment,
     VisionQAAccuracy,
+    DocumentLayoutAccuracy,
+    MultimodalConsistency,
+)
+from llmevalkit.hallucination import (
+    EntityHallucination,
+    NumericHallucination,
+    NegationHallucination,
+    FabricatedInfo,
+    ContradictionDetector,
+    SelfConsistency,
+    ConfidenceCalibration,
+    InstructionHallucination,
 )
 
 
@@ -98,14 +110,21 @@ METRIC_PRESETS = {
     # --- Security presets (v3) ---
     "security": [PromptInjectionCheck, BiasDetector],
     "security_full": [PromptInjectionCheck, BiasDetector, PIIDetector, Toxicity],
-    # --- Multimodal presets (v3) ---
+    # --- Multimodal presets (v3+v4) ---
     "ocr": [OCRAccuracy],
-    "multimodal": [OCRAccuracy, AudioTranscriptionAccuracy, ImageTextAlignment, VisionQAAccuracy],
+    "multimodal": [OCRAccuracy, AudioTranscriptionAccuracy, ImageTextAlignment, VisionQAAccuracy, DocumentLayoutAccuracy, MultimodalConsistency],
+    # --- Hallucination presets (v4) ---
+    "hallucination": [EntityHallucination, NumericHallucination, NegationHallucination, FabricatedInfo, ContradictionDetector, SelfConsistency, ConfidenceCalibration, InstructionHallucination],
+    "hallucination_quick": [EntityHallucination, NumericHallucination, FabricatedInfo],
+    "hallucination_rag": [EntityHallucination, NumericHallucination, ContradictionDetector, FabricatedInfo],
+    "hallucination_agent": [SelfConsistency, InstructionHallucination, ConfidenceCalibration],
+    "hallucination_medical": [EntityHallucination, NumericHallucination, NegationHallucination, ContradictionDetector],
     # --- Full audit preset ---
     "full_audit": [
         BLEUScore, ROUGEScore, TokenOverlap, KeywordCoverage,
         PIIDetector, HIPAACheck, GDPRCheck, DPDPCheck, EUAIActCheck,
         PromptInjectionCheck, BiasDetector,
+        EntityHallucination, NumericHallucination, FabricatedInfo,
     ],
     "enterprise": [
         Faithfulness, Hallucination, AnswerRelevance,

@@ -8,3 +8,4 @@ recursive-include llmevalkit/doceval *.py
 recursive-include llmevalkit/governance *.py
 recursive-include llmevalkit/security *.py
 recursive-include llmevalkit/multimodal *.py
+recursive-include llmevalkit/hallucination *.py

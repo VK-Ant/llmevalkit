@@ -286,7 +286,7 @@ class TestImports:
 
     def test_version(self):
         import llmevalkit
-        assert llmevalkit.__version__ == "3.0.2"
+        assert llmevalkit.__version__ == "4.0.0"
 
 
 # ── Math Metric Tests (NO API needed) ────────────────────────────────────────
