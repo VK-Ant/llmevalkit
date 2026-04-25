@@ -1,5 +1,7 @@
 # llmevalkit
 
+<img width="1200" height="630" alt="llmevalkit_v5_cover(2)" src="https://github.com/user-attachments/assets/afcb48bf-1802-4bde-801e-1ccdf15f66a9" />
+
 LLM evaluation, hallucination detection, AI content detection, compliance, document parsing, governance, security, observability, anomaly detection, and multimodal testing library for Python.
 
 61 built-in metrics across 10 modules. Everything works with or without an API key. Auto-logging enabled by default.
