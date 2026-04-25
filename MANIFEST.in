@@ -9,3 +9,6 @@ recursive-include llmevalkit/governance *.py
 recursive-include llmevalkit/security *.py
 recursive-include llmevalkit/multimodal *.py
 recursive-include llmevalkit/hallucination *.py
+recursive-include llmevalkit/detection *.py
+recursive-include llmevalkit/observe *.py
+recursive-include llmevalkit/anomaly *.py

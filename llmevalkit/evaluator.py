@@ -71,7 +71,13 @@ from llmevalkit.hallucination import (
     SelfConsistency,
     ConfidenceCalibration,
     InstructionHallucination,
+    SourceCoverage,
+    TemporalHallucination,
+    CausalHallucination,
+    RankingHallucination,
 )
+from llmevalkit.detection import AITextDetector, ContentOriginCheck, AIImageDetector, AIAudioDetector
+from llmevalkit.anomaly import OutputAnomalyDetector
 
 
 # Preset metric collections
@@ -113,18 +119,32 @@ METRIC_PRESETS = {
     # --- Multimodal presets (v3+v4) ---
     "ocr": [OCRAccuracy],
     "multimodal": [OCRAccuracy, AudioTranscriptionAccuracy, ImageTextAlignment, VisionQAAccuracy, DocumentLayoutAccuracy, MultimodalConsistency],
-    # --- Hallucination presets (v4) ---
-    "hallucination": [EntityHallucination, NumericHallucination, NegationHallucination, FabricatedInfo, ContradictionDetector, SelfConsistency, ConfidenceCalibration, InstructionHallucination],
-    "hallucination_quick": [EntityHallucination, NumericHallucination, FabricatedInfo],
-    "hallucination_rag": [EntityHallucination, NumericHallucination, ContradictionDetector, FabricatedInfo],
-    "hallucination_agent": [SelfConsistency, InstructionHallucination, ConfidenceCalibration],
-    "hallucination_medical": [EntityHallucination, NumericHallucination, NegationHallucination, ContradictionDetector],
+    # --- Hallucination presets (v4+v5) ---
+    "hallucination": [EntityHallucination, NumericHallucination, NegationHallucination, FabricatedInfo, ContradictionDetector, SelfConsistency, ConfidenceCalibration, InstructionHallucination, SourceCoverage, TemporalHallucination, CausalHallucination, RankingHallucination],
+    "hallucination_quick": [EntityHallucination, NumericHallucination, FabricatedInfo, SourceCoverage],
+    "hallucination_rag": [EntityHallucination, NumericHallucination, ContradictionDetector, FabricatedInfo, SourceCoverage],
+    "hallucination_agent": [SelfConsistency, InstructionHallucination, ConfidenceCalibration, CausalHallucination],
+    "hallucination_medical": [EntityHallucination, NumericHallucination, NegationHallucination, ContradictionDetector, TemporalHallucination, CausalHallucination],
+    "hallucination_financial": [NumericHallucination, TemporalHallucination, RankingHallucination, ContradictionDetector],
+    # --- AI Content Detection presets (v5) ---
+    "detection": [AITextDetector, ContentOriginCheck, AIImageDetector, AIAudioDetector],
+    "detection_text": [AITextDetector, ContentOriginCheck],
+    # --- Anomaly presets (v5) ---
+    "anomaly": [OutputAnomalyDetector],
+    # --- Production preset (v5) ---
+    "production": [
+        TokenOverlap, KeywordCoverage,
+        PIIDetector, HIPAACheck,
+        EntityHallucination, NumericHallucination, FabricatedInfo,
+        PromptInjectionCheck, OutputAnomalyDetector,
+    ],
     # --- Full audit preset ---
     "full_audit": [
         BLEUScore, ROUGEScore, TokenOverlap, KeywordCoverage,
         PIIDetector, HIPAACheck, GDPRCheck, DPDPCheck, EUAIActCheck,
         PromptInjectionCheck, BiasDetector,
-        EntityHallucination, NumericHallucination, FabricatedInfo,
+        EntityHallucination, NumericHallucination, FabricatedInfo, SourceCoverage,
+        OutputAnomalyDetector,
     ],
     "enterprise": [
         Faithfulness, Hallucination, AnswerRelevance,
@@ -167,6 +187,8 @@ class Evaluator:
         threshold: float = 0.5,
         verbose: bool = False,
         temperature: float = 0.0,
+        auto_log: bool = True,
+        log_path: Optional[str] = None,
     ):
         """Initialize the Evaluator.
         
@@ -185,6 +207,14 @@ class Evaluator:
         """
         self.console = Console()
         self.is_math_only = provider == "none"
+        self.auto_log = auto_log
+        self._logger = None
+        if self.auto_log:
+            try:
+                from llmevalkit.observe import EvalLogger
+                self._logger = EvalLogger(log_dir=log_path)
+            except Exception:
+                pass
         
         if self.is_math_only:
             self.config = EvalConfig(
@@ -349,6 +379,17 @@ class Evaluator:
         if self.config.verbose:
             self.console.print(f"\n  [bold]Overall: {overall:.3f}[/]  {'[green]PASSED' if eval_result.passed else '[red]FAILED'}[/]")
         
+        # Auto-log (silent, never breaks evaluation)
+        if self._logger:
+            try:
+                self._logger.log({
+                    "overall_score": eval_result.overall_score,
+                    "passed": eval_result.passed,
+                    "metrics": eval_result.metrics,
+                })
+            except Exception:
+                pass
+
         return eval_result
 
     def evaluate_batch(

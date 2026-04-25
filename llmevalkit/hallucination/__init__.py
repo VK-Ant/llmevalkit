@@ -26,6 +26,9 @@ from llmevalkit.hallucination.core_detectors import (
 from llmevalkit.hallucination.advanced_detectors import (
     SelfConsistency, ConfidenceCalibration, InstructionHallucination,
 )
+from llmevalkit.hallucination.extended_detectors import (
+    SourceCoverage, TemporalHallucination, CausalHallucination, RankingHallucination,
+)
 
 __all__ = [
     "EntityHallucination",
@@ -36,4 +39,8 @@ __all__ = [
     "SelfConsistency",
     "ConfidenceCalibration",
     "InstructionHallucination",
+    "SourceCoverage",
+    "TemporalHallucination",
+    "CausalHallucination",
+    "RankingHallucination",
 ]

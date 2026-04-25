@@ -249,27 +249,27 @@ class TestV4Presets(unittest.TestCase):
     def test_hallucination_preset(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="hallucination")
-        self.assertEqual(len(e.metrics), 8)
+        self.assertEqual(len(e.metrics), 12)
 
     def test_hallucination_quick(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="hallucination_quick")
-        self.assertEqual(len(e.metrics), 3)
+        self.assertEqual(len(e.metrics), 4)
 
     def test_hallucination_rag(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="hallucination_rag")
-        self.assertEqual(len(e.metrics), 4)
+        self.assertEqual(len(e.metrics), 5)
 
     def test_hallucination_agent(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="hallucination_agent")
-        self.assertEqual(len(e.metrics), 3)
+        self.assertEqual(len(e.metrics), 4)
 
     def test_hallucination_medical(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="hallucination_medical")
-        self.assertEqual(len(e.metrics), 4)
+        self.assertEqual(len(e.metrics), 6)
 
     def test_multimodal_updated(self):
         from llmevalkit import Evaluator

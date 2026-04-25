@@ -446,7 +446,7 @@ class TestV3Presets(unittest.TestCase):
     def test_full_audit_preset(self):
         from llmevalkit import Evaluator
         e = Evaluator(provider="none", preset="full_audit")
-        self.assertEqual(len(e.metrics), 14)
+        self.assertEqual(len(e.metrics), 16)
 
     def test_v1_presets_still_work(self):
         from llmevalkit import Evaluator
