@@ -444,3 +444,5 @@ class AIAudioDetector:
         return MetricResult(
             name=self.name, score=round(score, 4), reason=reason,
             details={"signals": signals})
+
+from llmevalkit.detection.enhanced import ImagePixelAnalysis, DeepfakeTextDetector

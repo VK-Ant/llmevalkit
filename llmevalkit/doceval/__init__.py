@@ -23,3 +23,5 @@ __all__ = [
     "FormatValidation",
     "ExtractionConsistency",
 ]
+
+from llmevalkit.doceval.table_extraction import TableExtractionAccuracy

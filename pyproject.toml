@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llmevalkit"
-version = "5.0.2"
-description = "LLM evaluation, hallucination detection, AI content detection, compliance, document parsing, governance, security, observability, and multimodal testing. 61 metrics. Works with or without API."
+version = "6.0.1"
+description = "LLM evaluation, hallucination detection, AI content detection, compliance, document parsing, governance, security, observability, ground truth testing, conversation evaluation, red team testing, and anomaly detection. 78 metrics across 13 modules. Works with or without API."
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"

@@ -77,7 +77,12 @@ from llmevalkit.hallucination import (
     RankingHallucination,
 )
 from llmevalkit.detection import AITextDetector, ContentOriginCheck, AIImageDetector, AIAudioDetector
+from llmevalkit.detection.enhanced import ImagePixelAnalysis, DeepfakeTextDetector
 from llmevalkit.anomaly import OutputAnomalyDetector
+from llmevalkit.groundtruth import ExactMatchAccuracy, FuzzyMatchAccuracy, GroundTruthF1, ContextualPrecision, ContextualRecall, JSONCorrectness
+from llmevalkit.conversation import ConversationCompleteness, TurnRelevancy, KnowledgeRetention, TaskCompletion
+from llmevalkit.redteam import ToxicityProbe, PIIExtractionProbe, JailbreakResistance, InstructionBypass
+from llmevalkit.doceval.table_extraction import TableExtractionAccuracy
 
 
 # Preset metric collections
@@ -152,6 +157,20 @@ METRIC_PRESETS = {
         PromptInjectionCheck, BiasDetector,
         NISTCheck,
     ],
+    # --- Ground Truth presets (v6) ---
+    "groundtruth": [ExactMatchAccuracy, FuzzyMatchAccuracy, GroundTruthF1, ContextualPrecision, ContextualRecall],
+    "groundtruth_quick": [ExactMatchAccuracy, FuzzyMatchAccuracy],
+    "groundtruth_rag": [GroundTruthF1, ContextualPrecision, ContextualRecall],
+    "json": [JSONCorrectness],
+    # --- Conversation presets (v6) ---
+    "conversation": [ConversationCompleteness, TurnRelevancy, KnowledgeRetention, TaskCompletion],
+    "conversation_quick": [ConversationCompleteness, TaskCompletion],
+    # --- Red Team presets (v6) ---
+    "redteam": [ToxicityProbe, PIIExtractionProbe, JailbreakResistance, InstructionBypass],
+    "redteam_quick": [JailbreakResistance, InstructionBypass],
+    # --- Enhanced presets (v6) ---
+    "detection_full": [AITextDetector, ContentOriginCheck, AIImageDetector, AIAudioDetector, ImagePixelAnalysis, DeepfakeTextDetector],
+    "doceval_table": [FieldAccuracy, FieldCompleteness, FieldHallucination, FormatValidation, ExtractionConsistency, TableExtractionAccuracy],
 }
 
 

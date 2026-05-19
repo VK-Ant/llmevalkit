@@ -12,3 +12,6 @@ recursive-include llmevalkit/hallucination *.py
 recursive-include llmevalkit/detection *.py
 recursive-include llmevalkit/observe *.py
 recursive-include llmevalkit/anomaly *.py
+recursive-include llmevalkit/groundtruth *.py
+recursive-include llmevalkit/conversation *.py
+recursive-include llmevalkit/redteam *.py
